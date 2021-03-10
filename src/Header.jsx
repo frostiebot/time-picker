@@ -23,7 +23,7 @@ class Header extends Component {
     disabledDate: PropTypes.func,
     placeholder: PropTypes.string,
     clearText: PropTypes.string,
-    value: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+    value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
     hourOptions: PropTypes.array,
     minuteOptions: PropTypes.array,
     secondOptions: PropTypes.array,
@@ -34,17 +34,18 @@ class Header extends Component {
     onClear: PropTypes.func,
     onEsc: PropTypes.func,
     allowEmpty: PropTypes.bool,
-    defaultOpenValue: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+    defaultOpenValue: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
     currentSelectPanel: PropTypes.string,
     focusOnOpen: PropTypes.bool,
     onKeyDown: PropTypes.func,
+    referenceDate: PropTypes.instanceOf(Date),
   };
 
   constructor(props) {
     super(props);
-    const { value, format } = props;
+    const { value, format, referenceDate } = props;
     this.state = {
-      str: value && formatTime(value, format) || '',
+      str: value && formatTime(value, format, referenceDate) || '',
       invalid: false,
     };
   }
@@ -61,9 +62,9 @@ class Header extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { value, format } = nextProps;
+    const { value, format, referenceDate } = nextProps;
     this.setState({
-      str: value && formatTime(value, format) || '',
+      str: value && formatTime(value, format, referenceDate) || '',
       invalid: false,
     });
   }
@@ -77,11 +78,12 @@ class Header extends Component {
       format, hourOptions, minuteOptions, secondOptions,
       disabledHours, disabledMinutes,
       disabledSeconds, onChange, allowEmpty,
+      referenceDate,
     } = this.props;
 
     if (str) {
       const originalValue = this.props.value;
-      const parsed = parseTime(str, format);
+      const parsed = parseTime(str, format, referenceDate);
 
 
       if (!isValidTime(parsed)) {

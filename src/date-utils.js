@@ -1,7 +1,7 @@
 import {
   parse as parseDate,
   format as formatDate,
-  toDate,
+  parseISO,
   isValid,
   getHours,
   setHours,
@@ -14,7 +14,16 @@ import {
   isSameSecond,
 } from 'date-fns/esm';
 
-export const parseTime = (value, format = null) => {
+/**
+ * Returns x raised to the n-th power.
+ *
+ * @param {string} value a string representing time
+ * @param {format} string date-fns format string
+ * @param {Date} Date assign a date to this value
+ * @return {Date} returns a date based on the value string
+ */
+
+export const parseTime = (value, format = null, referenceDate = new Date()) => {
   if (value === null) {
     return value;
   }
@@ -22,19 +31,20 @@ export const parseTime = (value, format = null) => {
     return value;
   }
   if (format === null) {
-    return toDate(value);
+    return parseISO(value);
   }
 
-  const parsed = parseDate(value, format, new Date);
+  const parsed = parseDate(value, format, referenceDate);
 
-  if (!isValid(parsed) || !value.startsWith(formatDate(parsed, format))) {
+  if (!isValid(parsed) || (format && !value.startsWith(formatDate(parsed, format)))) {
     return new Date('');
   }
 
   return parsed;
 };
 
-export const formatTime = (value, format) => formatDate(parseTime(value, format), format);
+export const formatTime = (value, format, referenceDate) =>
+  formatDate(parseTime(value, format, referenceDate), format);
 
 export const isValidTime = value => isValid(value);
 

@@ -454,7 +454,7 @@ describe('Select', () => {
         use12Hours: true,
         defaultValue: parseTime('00:00:00', 'HH:mm:ss'),  // moment().hour(0).minute(0).second(0),
         showSecond: false,
-        format: undefined,
+        format: null,
       });
       expect(picker.state.open).not.to.be.ok();
       const input = TestUtils.scryRenderedDOMComponentsWithClass(picker,
@@ -525,7 +525,7 @@ describe('Select', () => {
         use12Hours: true,
         defaultValue: parseTime('00:00:00', 'HH:mm:ss'),  // moment().hour(0).minute(0).second(0),
         showSecond: false,
-        format: 'h:mm A',
+        format: 'h:mm a',
       });
       expect(picker.state.open).not.to.be.ok();
       const input = TestUtils.scryRenderedDOMComponentsWithClass(picker,

@@ -1,6 +1,6 @@
 {
   "name": "rc-time-picker-date-fns",
-  "version": "3.2.8",
+  "version": "3.3.0",
   "description": "React TimePicker using date-fns",
   "keywords": [
     "react",
@@ -25,7 +25,6 @@
   "bugs": {
     "url": "http://github.com/frostiebot/time-picker/issues"
   },
-  "licenses": "MIT",
   "config": {
     "port": 8011
   },
@@ -62,7 +61,7 @@
   "dependencies": {
     "babel-runtime": "6.x",
     "classnames": "2.x",
-    "date-fns": "^2.0.0-alpha.7",
+    "date-fns": "^2.17.0",
     "prop-types": "^15.5.8",
     "rc-trigger": "^2.2.0"
   },

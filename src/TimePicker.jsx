@@ -8,7 +8,7 @@ import { formatTime } from './date-utils';
 import Panel from './Panel';
 import placements from './placements';
 
-function noop() {}
+function noop() { }
 
 function refFn(field, component) {
   this[field] = component;
@@ -18,11 +18,11 @@ export default class Picker extends Component {
   static propTypes = {
     prefixCls: PropTypes.string,
     clearText: PropTypes.string,
-    value: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-    defaultOpenValue: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+    value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
+    defaultOpenValue: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
     disabled: PropTypes.bool,
     allowEmpty: PropTypes.bool,
-    defaultValue: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+    defaultValue: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
     open: PropTypes.bool,
     defaultOpen: PropTypes.bool,
     align: PropTypes.object,
@@ -56,6 +56,7 @@ export default class Picker extends Component {
     focusOnOpen: PropTypes.bool,
     onKeyDown: PropTypes.func,
     autoFocus: PropTypes.bool,
+    referenceDate: PropTypes.instanceOf(Date),
   };
 
   static defaultProps = {
@@ -86,6 +87,7 @@ export default class Picker extends Component {
     use12Hours: false,
     focusOnOpen: false,
     onKeyDown: noop,
+    referenceDate: new Date,
   };
 
   constructor(props) {
@@ -150,8 +152,9 @@ export default class Picker extends Component {
         showMinute ? 'mm' : '',
         showSecond ? 'ss' : '',
       ].filter(item => !!item).join(':'));
-
-      return fmtString.concat(' a');
+      // aaaaa format outputs 'p' or 'a', but not 'am' or 'pm'
+      // So we add an 'm' to the end to achieve am/pm
+      return fmtString.concat(" aaaaa'm'");
     }
 
     return [
@@ -167,6 +170,7 @@ export default class Picker extends Component {
       disabledMinutes, disabledSeconds, hideDisabledOptions,
       allowEmpty, showHour, showMinute, showSecond, defaultOpenValue, clearText,
       addon, use12Hours, focusOnOpen, onKeyDown, hourStep, minuteStep, secondStep,
+      referenceDate,
     } = this.props;
     return (
       <Panel
@@ -195,6 +199,7 @@ export default class Picker extends Component {
         addon={addon}
         focusOnOpen={focusOnOpen}
         onKeyDown={onKeyDown}
+        referenceDate={referenceDate}
       />
     );
   }
@@ -249,7 +254,7 @@ export default class Picker extends Component {
     const {
       prefixCls, placeholder, placement, align,
       disabled, transitionName, style, className, getPopupContainer, name, autoComplete,
-      onFocus, onBlur, autoFocus,
+      onFocus, onBlur, autoFocus, referenceDate,
     } = this.props;
     const { open, value } = this.state;
     const popupClassName = this.getPopupClassName();
@@ -278,14 +283,14 @@ export default class Picker extends Component {
             name={name}
             onKeyDown={this.onKeyDown}
             disabled={disabled}
-            value={value && formatTime(value, this.getFormat()) || ''}
+            value={value && formatTime(value, this.getFormat(), referenceDate) || ''}
             autoComplete={autoComplete}
             onFocus={onFocus}
             onBlur={onBlur}
             autoFocus={autoFocus}
             onChange={noop}
           />
-          <span className={`${prefixCls}-icon`}/>
+          <span className={`${prefixCls}-icon`} />
         </span>
       </Trigger>
     );

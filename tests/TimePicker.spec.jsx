@@ -49,7 +49,7 @@ describe('TimePicker', () => {
       <TimePicker
         format={format}
         showSecond={showSecond}
-        defaultValue={parseTime('01:24:03', format)}
+        defaultValue={parseTime('01:24', format)}
         {...props}
       />, container);
   }
@@ -64,7 +64,7 @@ describe('TimePicker', () => {
         format={format}
         showSecond={showSecond}
         showMinute={showMinute}
-        defaultValue={parseTime('01:24:03', format)}
+        defaultValue={parseTime('01', format)}
         {...props}
       />, container);
   }

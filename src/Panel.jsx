@@ -8,7 +8,7 @@ import { parseTime, getHours, getMinutes } from './date-utils';
 import Header from './Header';
 import Combobox from './Combobox';
 
-function noop() {}
+function noop() { }
 
 function generateOptions(length, disabledOptions, hideDisabledOptions, step = 1) {
   const arr = [];
@@ -25,8 +25,8 @@ class Panel extends Component {
     clearText: PropTypes.string,
     prefixCls: PropTypes.string,
     className: PropTypes.string,
-    defaultOpenValue: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-    value: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+    defaultOpenValue: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
+    value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
     placeholder: PropTypes.string,
     format: PropTypes.string,
     disabledHours: PropTypes.func,
@@ -47,6 +47,7 @@ class Panel extends Component {
     addon: PropTypes.func,
     focusOnOpen: PropTypes.bool,
     onKeyDown: PropTypes.func,
+    referenceDate: PropTypes.instanceOf(Date),
   };
 
   static defaultProps = {
@@ -65,7 +66,7 @@ class Panel extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: parseTime(props.value),
+      value: parseTime(props.value, undefined, props.referenceDate),
       selectionRange: [],
     };
   }
@@ -112,7 +113,7 @@ class Panel extends Component {
       value
         ? getMinutes(value)
         : null
-      );
+    );
 
     const hourOptions = generateOptions(
       24, disabledHourOptions, hideDisabledOptions, hourStep
